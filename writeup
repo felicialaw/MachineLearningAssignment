@@ -1,0 +1,56 @@
+PROGRAMMING ASSIGNMENT WRITEUP
+
+* PROBLEM *
+Based on the principle of Human Activity Recognition, we attempt to predict individuals' manner
+of exercise using data collected about their movement.  I chose to use a random forest model.
+
+* MODEL CHOICE: random forest *
+Since this is a problem of predicting which of a set of exercise types (the 'classe' variable)
+the individual is carrying out, then using a classification tree seemed appropriate.  
+
+To improve accuracy, using multiple trees via a random forest approach appeared to be the best option.  In
+addition, random forests often perform very well in prediction.  However the time and machine power
+required to obtain a random forest model meant that I had to fit a single classification tree instead.
+
+All of the available variables (except for x) were used to build the model.
+
+* CROSS VALIDATION *
+I decided to use K-fold cross validation, with the standard k = 10.  Note that there is a trade 
+off between more bias but less variance when a smaller k is chosen.  In this case, with the large
+sample size, 10 folds, although somewhat arbitrary, seemed acceptable and is probably not a 
+pivotal choice. Therefore the initial training data was split into 10 folds, with one fold chosen 
+for testing each time and the remaining folds used to train the model.  The accuracy was obtained 
+for each of these.
+
+The expected out of sample error could be an average of the error (1 - accuracy) across the folds.
+
+The best estimate of out of sample error would be the error from the test dataset (which was not
+used at all in the training of the model) however the actual "classe" of the test observations is
+not data I have available.
+
+* RESULTS *
+
+* Final model
+	n= 19622 
+
+	node), split, n, loss, yval, (yprob)
+      * denotes terminal node
+
+	 1) root 19622 14042 A (0.28 0.19 0.17 0.16 0.18)  
+	   2) roll_belt< 130.5 17977 12411 A (0.31 0.21 0.19 0.18 0.11)  
+		 4) pitch_forearm< -33.95 1578    10 A (0.99 0.0063 0 0 0) *
+		 5) pitch_forearm>=-33.95 16399 12401 A (0.24 0.23 0.21 0.2 0.12)  
+		  10) cvtd_timestamp02/12/2011 13:33>=0.5 1307   333 A (0.75 0.25 0 0 0) *
+		  11) cvtd_timestamp02/12/2011 13:33< 0.5 15092 11638 B (0.2 0.23 0.23 0.21 0.13)  
+			22) magnet_dumbbell_z< -24.5 5554  3509 A (0.37 0.29 0.093 0.2 0.052)  
+			  44) raw_timestamp_part_1< 1.322838e+09 1218    57 A (0.95 0.042 0.0049 0 0) *
+			  45) raw_timestamp_part_1>=1.322838e+09 4336  2800 B (0.2 0.35 0.12 0.26 0.066) *
+			23) magnet_dumbbell_z>=-24.5 9538  6635 C (0.1 0.2 0.3 0.22 0.18) *
+	   3) roll_belt>=130.5 1645    14 E (0.0085 0 0 0 0.99) *
+
+* Estimate of out of sample error
+	average across folds 1 to 10: 50% accuracy, i.e. error of 50%
+
+* CONCLUSION *
+By estimating a classification tree model with estimated out of sample error 50%, we are able to
+predict the "classe" of individuals 
